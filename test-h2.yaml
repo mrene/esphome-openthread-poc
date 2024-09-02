@@ -1,0 +1,79 @@
+esphome:
+  name: ott-h2
+
+esp32:
+  board: esp32-h2-devkitm-1
+  variant: esp32h2
+  framework:
+    type: esp-idf
+    version: "5.3.0"
+    # This contains the esp32-h2-devkit board
+    platform_version: "https://github.com/pioarduino/platform-espressif32/releases/download/53.03.10%%2Brc1/platform-espressif32.zip"
+
+external_components:
+  - source: my_components
+    components:
+      - openthread
+
+network:
+  enable_ipv6: true
+
+# Enable logging
+logger:
+  level: DEBUG
+  hardware_uart: USB_SERIAL_JTAG
+
+debug:
+  update_interval: 5s
+
+openthread:
+  channel: !secret ot_channel
+  network_name: !secret ot_network_name
+  network_key: !secret ot_network_key
+  panid: !secret ot_panid
+  extpanid: !secret ot_extpanid
+  pskc: !secret ot_pskc
+
+# The web server will cause the HA integration to fail, see note in the README
+# web_server:
+#   port: 80
+
+api:
+  encryption:
+    key: !secret noise_key
+
+# This is the "Boot" button on my dev board
+binary_sensor:
+  - platform: gpio
+    id: button1
+    name: "Button"
+    publish_initial_state: true
+    pin:
+      number: GPIO9
+      mode: INPUT_PULLUP
+      inverted: true
+
+
+text_sensor:
+  - platform: template
+    name: "OTT Thread RLOC16"
+    lambda: |-
+      if (!esp_openthread_lock_acquire(1)) {
+          return {"Unknown"};
+      }
+      auto instance = esp_openthread_get_instance();
+      auto rloc16 = otThreadGetRloc16(instance);
+      esp_openthread_lock_release();
+      char buf[10];
+      snprintf(buf, sizeof(buf), "%04x", rloc16);
+      return {buf};
+  - platform: template
+    name: "OTT Thread Role"
+    lambda: |-
+      if (!esp_openthread_lock_acquire(1)) {
+          return {"Unknown"};
+      }
+      auto instance = esp_openthread_get_instance();
+      auto role = otThreadDeviceRoleToString(otThreadGetDeviceRole(instance));
+      esp_openthread_lock_release();
+      return {role};

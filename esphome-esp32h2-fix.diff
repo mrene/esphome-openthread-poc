@@ -1,0 +1,28 @@
+commit 7801e108752deed28482f8655770dde69047a49e
+Author: Mathieu Rene <mathieu.rene@gmail.com>
+Date:   Mon Sep 2 14:00:28 2024 -0400
+
+    fix build for esp32h2 using esp-idf 5.3
+
+diff --git a/esphome/components/debug/debug_esp32.cpp b/esphome/components/debug/debug_esp32.cpp
+index cfdfdd2a6..34aea9e26 100644
+--- a/esphome/components/debug/debug_esp32.cpp
++++ b/esphome/components/debug/debug_esp32.cpp
+@@ -16,6 +16,8 @@
+ #include <esp32s2/rom/rtc.h>
+ #elif defined(USE_ESP32_VARIANT_ESP32S3)
+ #include <esp32s3/rom/rtc.h>
++#elif defined(USE_ESP32_VARIANT_ESP32H2)
++#include <esp32h2/rom/rtc.h>
+ #endif
+ #ifdef USE_ARDUINO
+ #include <Esp.h>
+@@ -61,7 +63,7 @@ std::string DebugComponent::get_reset_reason_() {
+     case RTCWDT_SYS_RESET:
+       reset_reason = "RTC Watch Dog Reset Digital Core";
+       break;
+-#if !defined(USE_ESP32_VARIANT_ESP32C6)
++#if !defined(USE_ESP32_VARIANT_ESP32C6) && !defined(USE_ESP32_VARIANT_ESP32H2)
+     case INTRUSION_RESET:
+       reset_reason = "Intrusion Reset CPU";
+       break;

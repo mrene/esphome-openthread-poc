@@ -15,6 +15,10 @@ Bugs:
 
 Note: This somehow makes the CLI available via the USB Serial JTAG interface, esphome won't pass any input but you can interact with it with picocom/mincom/idf.py.
 
+## Tested MCUs
+- [x] [ESP32C6](./test-ot.yaml)
+- [x] [ESP32H2](./test-h2.yaml) (with a [small fix to esphome](https://github.com/esphome/esphome/pull/7393))
+
 
 ## Usage with nix
 If you have nix installed, you can use the provided devshell to directly used the patched esphome.
