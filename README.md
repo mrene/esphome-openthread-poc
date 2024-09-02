@@ -13,6 +13,8 @@ Caveats:
 Bugs:
 - If the web server is active, the home assistant integration will sporadically disconnect, an error is seen HA's console where it's trying to parse the ipv6 address following the first : as a port number. (`ValueError: Port could not be cast to integer value as '4cc8:e352:1:3421:d788:5046:bc2d:80'`). Disabling the web server resolves this problem.
 
+Note: This somehow makes the CLI available via the USB Serial JTAG interface, esphome won't pass any input but you can interact with it with picocom/mincom/idf.py.
+
 
 ## Usage with nix
 If you have nix installed, you can use the provided devshell to directly used the patched esphome.
