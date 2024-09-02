@@ -1,0 +1,13 @@
+diff --git a/esphome/components/network/util.cpp b/esphome/components/network/util.cpp
+index ed519f738..5265106f6 100644
+--- a/esphome/components/network/util.cpp
++++ b/esphome/components/network/util.cpp
+@@ -26,7 +26,7 @@ bool is_connected() {
+ #ifdef USE_HOST
+   return true;  // Assume its connected
+ #endif
+-  return false;
++  return true;
+ }
+ 
+ bool is_disabled() {
